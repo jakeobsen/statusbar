@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+import datetime
+from datetime import datetime
+
+now = datetime.now()
+labels = [
+    [ '🕐', '🕜' ], # Index:  0
+    [ '🕑', '🕝' ], # Index:  1
+    [ '🕒', '🕞' ], # Index:  2
+    [ '🕓', '🕟' ], # Index:  3
+    [ '🕔', '🕠' ], # Index:  4
+    [ '🕕', '🕡' ], # Index:  5
+    [ '🕖', '🕢' ], # Index:  6
+    [ '🕗', '🕣' ], # Index:  7
+    [ '🕘', '🕤' ], # Index:  8
+    [ '🕙', '🕥' ], # Index:  9
+    [ '🕚', '🕦' ], # Index: 10
+    [ '🕛', '🕧' ]  # Index: 11
+]
+
+labelHour = ((now.hour - 12) if now.hour > 12 else now.hour) - 1
+labelMinute = 1 if now.minute >= 30 else 0
+timeHour = now.hour if now.hour > 9 else "0{}".format(now.hour)
+timeMinute = now.minute if now.minute > 9  else "0{}".format(now.minute)
+print ( "{}{}:{} ".format(labels[labelHour][labelMinute], timeHour, timeMinute ))

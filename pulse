@@ -1,0 +1,19 @@
+#!/bin/bash
+
+speakerLoud="🔊"
+speakerMedium="🔉"
+speakerSilent="🔈"
+speakerMuted="🔇"
+
+
+# muted
+muted=$(pacmd list-sinks | awk '/muted/ { print $2 }')
+
+# volume
+volume=$(pacmd list-sinks | awk '/volume/ { print $5 }' | head -n1 | sed 's/%//')
+
+[ $volume -le 33 ] && speakerLabel=$speakerSilent
+[ $volume -gt 33 ] && speakerLabel=$speakerMedium
+[ $volume -ge 66 ] && speakerLabel=$speakerLoud
+
+[ "$muted" == "yes" ] && echo "$speakerMuted" || echo "$speakerLabel $volume"

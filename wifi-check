@@ -1,0 +1,13 @@
+#!/bin/bash
+
+labelPlane="✈️"
+labelStop="🛑"
+labelStop=$labelPlane
+
+softLocked=$(rfkill list | grep -A2 -i "wireless lan" | grep -i "soft blocked" | cut -d' ' -f3)
+hardLocked=$(rfkill list | grep -A2 -i "wireless lan" | grep -i "hard blocked" | cut -d' ' -f3)
+
+[ "$softLocked" == "yes" ] && output="$labelStop"
+[ "$hardLocked" == "yes" ] && output="$output$labelPlane"
+
+echo $output

@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# Module showing network traffic. Shows how much data has been received (RX) or
+# transmitted (TX) since the previous time this script ran. So if run every
+# second, gives network traffic per second.
+
+b2h () {
+     echo $1 | awk '{xin=$1;if(xin==0){print "0 B";}else{x=(xin<0?-xin:xin);s=(xin<0?-1:1);split("B KiB MiB GiB TiB PiB",type);for(i=5;y < 1;i--){y=x/(2^(10*i));}print y*s " " type[i+2];};}'
+ }
+
+logfile="${XDG_CACHE_HOME:-$HOME/.cache}/netlog"
+prevdata="$(cat "$logfile")" || echo "0 0" > "$logfile"
+
+rxcurrent="$(($(paste -d '+' /sys/class/net/[ew]*/statistics/rx_bytes)))"
+txcurrent="$(($(paste -d '+' /sys/class/net/[ew]*/statistics/tx_bytes)))"
+
+rx=$(b2h $(((rxcurrent-${prevdata%% *}))))
+tx=$(b2h $(((txcurrent-${prevdata##* }))))
+
+rx_num=$(echo ${rx%% *} | awk '{printf "%8.2f\n",$0}')
+rx_type=$(echo ${rx##* } | awk '{printf "%3s\n",$0}')
+
+tx_num=$(echo ${tx%% *} | awk '{printf "%8.2f\n",$0}')
+tx_type=$(echo ${tx##* } | awk '{printf "%3s\n",$0}')
+printf "🔻%s 🔺%s\\n" \
+	"$rx_num $rx_type" \
+	"$tx_num $tx_type"
+
+echo "$rxcurrent $txcurrent" > "$logfile"

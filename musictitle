@@ -1,0 +1,4 @@
+#!/bin/bash
+title=$(pgrep mpv > /dev/null && grep -a StreamTitle $HOME/.cache/mpvlog | sed 's/.*StreamTitle: //p' | tail -n 1)
+
+[ -z "$title" ] && echo "" || echo 🎵 $title

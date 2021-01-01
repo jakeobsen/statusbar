@@ -1,0 +1,2 @@
+#!/bin/sh
+uptime | cut -d , -f1 | sed 's/^.............//' | awk '{$1=$1;print}'

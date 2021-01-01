@@ -1,0 +1,16 @@
+#!/bin/sh
+# For i3blocks
+CSV_FILE=$1
+if [ ! -z $CSV_FILE ]; then
+    ((m+=0))
+    ((t+=0))
+    while read line; do
+        localPath=$(echo $line | cut -d, -f2)
+        if mount | grep -q " $localPath "; then
+            ((m+=1))
+        fi
+        ((t+=1))
+    done <$CSV_FILE
+    [ $m -gt 0 ] && echo 🗄️$m/$t
+    exit 0
+fi

@@ -1,0 +1,37 @@
+#!/usr/bin/env python3
+
+import netifaces
+
+interfaceList = netifaces.interfaces()
+bannedInterfaces = ['lo', 'docker0']
+inet = netifaces.AF_INET
+inet6 = netifaces.AF_INET6
+labelDefault = "🌍"
+labelTUN = "🔒"
+labelWWAN = "📶"
+output = ""
+outputLength = len(output)
+
+for interface in interfaceList:
+    if interface not in bannedInterfaces:
+        if "macvtap" not in interface and "virbr" not in interface:
+            ipList = netifaces.ifaddresses(interface)
+            v4 = ipList[inet][0]['addr'] if inet in ipList else None
+            v6 = ipList[inet6][0]['addr'] if inet6 in ipList else None
+            if "tun" in interface:
+                label = labelTUN
+            if "wg" in interface:
+                label = labelTUN
+            elif "wwp" in interface:
+                label = labelWWAN
+            else:
+                label = labelDefault
+
+            if v4 is not None:
+                if(len(output) > outputLength):
+                    output = "{} ".format(output)
+                    outputLength = len(output)
+                output = "{}{}{}".format(output, label, v4)
+
+print(output)
+print(output)
